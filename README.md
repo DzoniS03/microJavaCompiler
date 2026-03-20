@@ -1,4 +1,4 @@
-# MJCompiler
+# μJava Compiler
 
 A MicroJava compiler implementation written in Java, developed as a university project. This compiler translates MicroJava source code into bytecode that can be executed on the MicroJava Virtual Machine.
 
