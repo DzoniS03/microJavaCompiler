@@ -138,7 +138,7 @@ int numbers[];
 }
 ```
 
-![Execution Result](screenshots/result.png)
+![Execution Result](screenshots/result.PNG)
 
 ## Compiler Output
 
