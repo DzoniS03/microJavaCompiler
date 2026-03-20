@@ -1,0 +1,20 @@
+program example
+
+const int MAX = 100;
+
+int count;
+int numbers[];
+
+{
+    void main()
+    {
+        numbers = new int[10];
+        count = 0;
+
+        for (count = 0; count < 10; count++) {
+            numbers[count] = count * 2;
+        }
+
+        print(numbers[5]);  // Output: 10
+    }
+}

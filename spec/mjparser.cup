@@ -1,0 +1,492 @@
+package rs.ac.bg.etf.pp1;
+
+import java_cup.runtime.*;
+import org.apache.log4j.*;
+import rs.ac.bg.etf.pp1.ast.*;
+
+parser code {:
+	
+	boolean errorDetected = false;
+	Logger log = Logger.getLogger(getClass());
+     
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error("Sintaksna greska", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error("Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	errorDetected = true;
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" na liniji ").append(((Symbol)info).left);
+        log.error(msg.toString());
+    }    
+:}
+
+init with {:
+	errorDetected = false;
+:}
+
+scan with {:
+	Symbol s = this.getScanner().next_token();
+	if (s != null && s.value != null) 
+		log.info(s.toString() + " " + s.value.toString());
+	return s;
+:}
+
+/* ////////////// < TERMINALI I NETERMINALI > ////////////// */
+
+terminal PROG, OBRACE, CBRACE, CONST, ASSIGN, SEMICOLON, COMMA;
+terminal OBRACKET, CBRACKET, ENUM, VOID, OPAREN, CPAREN;
+terminal IF, ELSE, BREAK, CONTINUE, RETURN, READ, PRINT, SWITCH, CASE, COLON, QMARK, FOR, WHILE, DO, FOREACH, GOTO, SKIP;
+terminal INC, DEC, AND, OR;
+terminal MINUS, NEW;
+terminal DOT, LENGTH;
+terminal EQUAL, NOTEQUAL, GREATER, GREATEREQUAL, LESSER, LESSEREQUAL, PLUS, MUL, DIV, MOD;
+
+terminal String IDENT;
+terminal Character CHARACTER;
+terminal Integer NUMBER;     
+terminal Integer BOOL;
+
+nonterminal Program, ProgName, ConstVarEnumDeclList, MethodDeclList, ConstDeclList, VarDeclList, EnumDecl;
+nonterminal ConstDecl, AdditionalConstDecl, Constant;
+nonterminal VarDecl, AdditionalVarDecl;
+nonterminal EnumType, AdditionalEnumTypes;
+nonterminal MethodDecl, FormParsList, VarDeclListExtra, StatementList;
+nonterminal FormPar, AdditionalFormPars;
+nonterminal Statement, DesignatorStatement, ElseStm, CaseList, SingleCase, SwitchCaseCheck, ForDesignatorStm, ForCondition, ForeachNonterm, ForEachBegin, Label;
+nonterminal AssignOp;
+nonterminal ActParsList, AdditionalActPars, ActPar, Relop;
+nonterminal Mulop, UnaryOp, Addop;
+nonterminal SwitchNonterm, ForNonterm, ActParsStart, Else, TernaryColon, ForCondStart, ForIncrStart, ForBodyStart, WhileCondBegin, DoNonterm, WhileNonterm;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor, FactorOption;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct MulopFactorList, Term, AddopTermList, Expr, SimpleExpr; 
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Condition, CondTermList, CondTerm, CondFactList, CondFact, Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesArrayName, MethTypeName, DesName, Designator1, Designator2;
+
+precedence left ELSE;
+
+/* ////////////////// < GRAMATIKA > ////////////////// */
+
+/* //////////////////////////////////////////////////////////////////////////////// */
+/* Program = "program" ident {ConstDecl | VarDecl | EnumDecl} "{" {MethodDecl} "}". */
+/* //////////////////////////////////////////////////////////////////////////////// */
+
+Program ::= (Program) PROG ProgName ConstVarEnumDeclList OBRACE MethodDeclList CBRACE;
+
+ProgName ::= (ProgName) IDENT;
+
+ConstVarEnumDeclList ::= 	(ConstVarEnumDeclList_Const) ConstVarEnumDeclList ConstDeclList
+							|
+							(ConstVarEnumDeclList_Var) ConstVarEnumDeclList VarDeclList
+							|
+							(ConstVarEnumDeclList_Enum) ConstVarEnumDeclList EnumDecl
+							|
+							(ConstVarEnumDeclList_e) /* e */
+							;
+						
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* ConstDecl = "const" Type ident "=" (numConst | charConst | boolConst) {, ident "=" (numConst | charConst | boolConst)} ";". */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+ConstDeclList ::= (ConstDeclList) CONST Type ConstDecl AdditionalConstDecl SEMICOLON;
+
+ConstDecl ::= (ConstDecl) IDENT ASSIGN Constant;
+
+AdditionalConstDecl ::= (AdditionalConstDecl_Chain) COMMA ConstDecl AdditionalConstDecl
+						|
+						(AdditionalConstDecl_e) /* e */
+						;
+
+Constant ::= 	(Constant_NUMBER) NUMBER
+				|
+				(Constant_CHAR) CHARACTER
+				|
+				(Constant_BOOL) BOOL
+				;
+
+/* ///////////////////////////////////////////////////////// */
+/* VarDecl = Type ident ["[" "]"] {"," ident ["[" "]"]} ";". */
+/* ///////////////////////////////////////////////////////// */
+
+VarDeclList ::= (VarDeclList) Type VarDecl AdditionalVarDecl SEMICOLON;
+
+AdditionalVarDecl ::= 	(AdditionalVarDecl_COMMA) COMMA VarDecl AdditionalVarDecl
+						|
+						(AdditionalVarDecl_e) /* e */
+						;
+
+VarDecl ::= (VarDecl_IDENT) IDENT
+			|
+			(VarDecl_Array) IDENT OBRACKET CBRACKET
+			|
+			(VarDecl_error) error:e
+			{: parser.report_error("Greska u deklaraciji promenljive na liniji " + eleft, null); :}
+			;
+			
+/* //////////////////////////////////////////////////////////////////////////////// */	
+/* EnumDecl = "enum" ident "{" ident ["=" numConst] {"," ident ["=" numConst]} "}". */
+/* //////////////////////////////////////////////////////////////////////////////// */
+
+EnumDecl ::= (EnumDecl) ENUM IDENT OBRACE EnumType AdditionalEnumTypes CBRACE;
+
+AdditionalEnumTypes ::= (AdditionalEnumTypes_COMMA) COMMA EnumType AdditionalEnumTypes
+						|
+						(AdditionalEnumTypes_e) /* e */
+						;
+
+EnumType ::= 	(EnumType_IDENT) IDENT
+				|
+				(EnumType_IDENT_NUM) IDENT ASSIGN NUMBER
+				;
+
+/* //////////////////////////////////////////////////////////////////////////////////// */
+/* MethodDecl = (Type | "void") ident "(" [FormPars] ")" {VarDecl} "{" {Statement} "}". */
+/* //////////////////////////////////////////////////////////////////////////////////// */
+
+MethodDeclList ::= 	(MethodDeclList_Chain) MethodDeclList MethodDecl
+					| 
+					(MethodDeclList_e) /* e */
+					;
+
+MethodDecl ::= (MethodDecl) MethTypeName OPAREN FormParsList CPAREN VarDeclListExtra OBRACE StatementList CBRACE;
+
+MethTypeName ::= 	(MethTypeName_Type) Type IDENT
+					|
+					(MethTypeName_VOID) VOID IDENT
+					;
+
+VarDeclListExtra ::= 	(VarDeclListExtra_Chain) VarDeclListExtra VarDeclList
+						|
+						(VarDeclListExtra_e) /* e */
+						;
+						
+/* /////////////////////////////////////////////////////////// */
+/* FormPars = Type ident ["[" "]"] {"," Type ident ["[" "]"]}. */
+/* /////////////////////////////////////////////////////////// */
+
+FormParsList ::= 	(FormParsList_Chain) FormPar AdditionalFormPars
+					|
+					(FormParsList_e) /* e */
+					;
+
+AdditionalFormPars ::= 	(AdditionalFormPars_COMMA) COMMA FormPar AdditionalFormPars
+						|
+						(AdditionalFormPars_e) /* e */
+						;
+
+FormPar ::= (FormPar_Type) Type IDENT
+			|
+			(FormPar_Array) Type IDENT OBRACKET CBRACKET
+			|
+			(FormPar_error) error:e
+			{: parser.report_error("Greska u definiciji formalnih parametara na liniji " + eleft, null); :}
+			;
+
+/* ///////////// */
+/* Type = ident. */
+/* ///////////// */
+
+Type ::= (Type) IDENT;
+
+/* ////////////////////////////////////////////////////////////////////////////////////////// */
+/*   Statement = DesignatorStatement  ";" 
+	| "if" "(" Condition ")" Statement ["else" Statement] 
+    | "break" ";" 
+    | "continue" ";"
+    | "return" [Expr] ";" 
+    | "read" "(" Designator ")" ";" 
+    | "print" "(" Expr ["," numConst] ")" ";" 
+    | "switch" "(" Expr ")" "{" {"case" numConst ":" {Statement} } "}" 
+    | "for" "(" [DesignatorStatement] ";" [Condition] ";" [DesignatorStatement] ")" Statement   
+    | "{" {Statement} "}". */					
+/* ////////////////////////////////////////////////////////////////////////////////////////// */
+
+StatementList ::= 	(StatementList_Chain) StatementList Statement
+					|
+					(StatementList_e) /* e */
+					;
+
+Statement ::= 	(Statement_DesStm) DesignatorStatement SEMICOLON
+				|
+				(Statement_IF) IF OPAREN Condition CPAREN Statement ElseStm
+				|
+				(Statement_BREAK) BREAK SEMICOLON
+				|
+				(Statement_CONTINUE) CONTINUE SEMICOLON
+				|
+				(Statement_RETURN) RETURN SEMICOLON
+				|
+				(Statement_RET_Expr) RETURN Expr SEMICOLON
+				|
+				(Statement_READ) READ OPAREN Designator CPAREN SEMICOLON
+				|
+				(Statement_PRINT) PRINT OPAREN Expr CPAREN SEMICOLON
+				|
+				(Statement_PRINT_NUM) PRINT OPAREN Expr COMMA NUMBER CPAREN SEMICOLON
+				|
+				(Statement_SWITCH) SwitchNonterm OPAREN Expr CPAREN OBRACE CaseList CBRACE
+				|
+				(Statement_FOR) ForNonterm OPAREN ForDesignatorStm SEMICOLON ForCondStart ForCondition SEMICOLON ForIncrStart ForDesignatorStm ForBodyStart CPAREN Statement
+				|
+				(Statement_Block) OBRACE StatementList CBRACE
+				|
+				(Statement_WHILE) WhileNonterm OPAREN WhileCondBegin Condition CPAREN Statement
+				|
+				(Statement_DO_WHILE) DoNonterm Statement WHILE OPAREN Condition CPAREN SEMICOLON
+				|
+				(Statement_FOREACH) ForeachNonterm OPAREN ForEachBegin Designator1 COLON Designator2 CPAREN Statement
+				|
+				(Statement_LABEL) Label COLON Statement
+				|
+				(Statement_GOTO) GOTO IDENT SEMICOLON
+				|
+				(Statement_SKIP) SKIP NUMBER SEMICOLON
+				;
+
+SwitchNonterm ::= (SwitchNonterm) SWITCH;
+
+ForNonterm ::= (ForNonterm) FOR;
+
+WhileNonterm ::= (WhileNonterm) WHILE;
+WhileCondBegin ::= (WhileCondBegin) /* e */;
+
+DoNonterm ::= (DoNonterm) DO;
+
+ForeachNonterm ::= (ForeachNonterm) FOREACH;
+Designator1 ::= (Designator1) Designator;
+Designator2 ::= (Designator2) Designator;
+ForEachBegin ::= (ForEachBegin) /* e */;
+
+ForCondStart ::= (ForCondStart) /* e */;
+ForIncrStart ::= (ForIncrStart) /* e */;
+ForBodyStart ::= (ForBodyStart) /* e */;
+
+Label ::= (Label) IDENT;
+
+ElseStm ::= (ElseStm_yay) Else Statement
+			|
+			(ElseStm_nay) /* e */
+			;
+			
+Else ::= (Else) ELSE;
+			
+CaseList ::= 	(CaseList_Chain) CaseList SingleCase
+				|
+				(CaseList_e) /* e */
+				;
+
+SingleCase ::= (SingleCase) SwitchCaseCheck StatementList;
+
+SwitchCaseCheck ::= (SwitchCaseCheck) CASE NUMBER COLON;
+
+ForDesignatorStm ::= 	(ForDesignatorStm_exists) DesignatorStatement
+						|
+						(ForDesignatorStm_e) /* e */
+						;
+
+ForCondition ::= 	(ForCondition_exists) Condition
+					|
+					(ForCondition_e) /* e */
+					;
+
+/* ////////////////////////////////////////////////////////////////////////////////// */				
+/* DesignatorStatement = Designator (Assignop Expr | "(" [ActPars] ")" | "++" | "‐‐") */
+/* ////////////////////////////////////////////////////////////////////////////////// */
+
+DesignatorStatement ::= (DesignatorStatement_Assign) Designator AssignOp Expr
+						|
+						(DesignatorStatement_ActPars) Designator OPAREN ActParsList CPAREN
+						|
+						(DesignatorStatement_INC) Designator INC
+						|
+						(DesignatorStatement_DEC) Designator DEC
+						|
+						(DesignatorStatement_error) error:e
+						{: parser.report_error("Greska u konstrukciji iskaza dodele na liniji " + eleft, null); :}
+						;
+
+/* //////////////////////////// */
+/* ActPars =  Expr {"," Expr}.  */
+/* //////////////////////////// */
+
+ActParsList ::= (ActParsList_Chain) ActParsStart ActPar AdditionalActPars
+				|
+				(ActParsList_e) ActParsStart
+				;
+
+ActParsStart ::= (ActParsStart) /* e */;
+
+AdditionalActPars ::= 	(AdditionalActPars_COMMA) COMMA ActPar AdditionalActPars
+						|
+						(AdditionalActPars_e) /* e */
+						;
+
+ActPar ::= (ActPar) Expr;
+
+/* ///////////////////////////////////// */
+/* Condition = CondTerm {"||" CondTerm}. */
+/* ///////////////////////////////////// */
+
+Condition ::= 	(Condition_OK) CondTermList
+				|
+				(Condition_error) error:e
+				{: parser.report_error("Greska u logickom izrazu unutar if naredbe na liniji " + eleft, null); :}
+				;
+
+CondTermList ::= 	(CondTermList_OR) CondTermList OR CondTerm
+					|
+					(CondTermList_Single) CondTerm
+					;
+
+/* ////////////////////////////////////// */
+/* CondTerm =  CondFact  {"&&" CondFact}.
+/* ////////////////////////////////////// */
+
+CondTerm ::= (CondTerm) CondFactList;
+
+CondFactList ::= 	(CondFactList_AND) CondFactList AND CondFact 
+				 	|
+					(CondFactList_Single) CondFact
+					;
+
+/* ////////////////////////////// */
+/* CondFact =  Expr [Relop Expr]. */
+/* ////////////////////////////// */
+
+CondFact ::= 	(CondFact_SimpleExpr) SimpleExpr
+				| 
+				(CondFact_Relop) SimpleExpr Relop SimpleExpr
+				;
+
+/* ///////////////////////////////////// */
+/* Expr =  ["-"] Term {Addop Term}  
+	|  CondFact "?" Expr ":" Expr. 
+	|  Contition "?" Expr ":" Expr. */
+/* ///////////////////////////////////// */
+
+Expr ::= 	(Expr_Simple) SimpleExpr
+			|
+			(Expr_Ternary_Condition) Condition QMARK Expr TernaryColon Expr
+			;
+
+TernaryColon ::= (TernaryColon) COLON;
+
+SimpleExpr ::= (SimpleExpr) AddopTermList;
+
+AddopTermList ::= 	(AddopTermList_Addop) AddopTermList Addop Term
+					|
+					(AddopTermList_SingleTerm) Term
+					;
+					
+/* ////////////////////////////// */					
+/* Term =  Factor {Mulop Factor}. */
+/* ////////////////////////////// */
+
+Term ::= (Term) MulopFactorList;			
+					
+MulopFactorList ::= (MulopFactorList_Mulop) MulopFactorList Mulop Factor
+					|
+					(MulopFactorList_SingleFactor) Factor
+					;					
+
+/* ///////////////////////////////////////// */
+/* Factor = Designator ["(" [ActPars] ")"] 
+ 	|  numConst 
+ 	|  charConst  
+  	|  boolConst  
+ 	|  "new" Type "[" Expr "]" 
+ 	|  "(" Expr ")". */		
+/* ///////////////////////////////////////// */
+
+Factor ::= (Factor) UnaryOp FactorOption;
+
+UnaryOp ::= (UnaryOp_MINUS) MINUS
+			|
+			(UnaryOp_e) /* e */
+			; 
+
+FactorOption ::= 	(FactorOption_Method) Designator OPAREN ActParsList CPAREN
+					|
+					(FactorOption_Des) Designator
+					|
+					(FactorOption_NUM) NUMBER
+					|
+					(FactorOption_CHAR) CHARACTER
+					|
+					(FactorOption_BOOL) BOOL
+					|
+					(FactorOption_NEW) NEW Type OBRACKET Expr CBRACKET
+					|
+					(FactorOption_Expr) OPAREN Expr CPAREN
+					;
+
+/* /////////////////////////////////////////////////////////// */
+/* Designator = ident {"." (ident | "length") | "[" Expr "]"}. */
+/* /////////////////////////////////////////////////////////// */
+
+Designator ::=  (Designator_IDENT) DesName
+                |
+                (Designator_Enum) DesName DOT IDENT /* polje enuma */
+                |
+                (Designator_Array) DesArrayName OBRACKET Expr CBRACKET /* element niza */
+                |
+                (Designator_Length) DesName DOT LENGTH /* length svojstvo niza */
+                ;
+                
+DesArrayName ::= (DesArrayName) IDENT;
+DesName ::= (DesName) IDENT;
+
+/* /////////////// */
+/* Assignop = "=". */
+/* /////////////// */
+
+AssignOp ::= (AssignOp) ASSIGN;
+
+/* /////////////////////////////////////////////// */
+/* Relop =  "==" | "!=" | ">" | ">=" | "<" | "<=". */
+/* /////////////////////////////////////////////// */
+
+Relop ::= 	(Relop_EQUAL) EQUAL
+			|
+			(Relop_NOTEQUAL) NOTEQUAL
+			|
+			(Relop_GREATER) GREATER
+			|
+			(Relop_GREATEREQUAL) GREATEREQUAL
+			|
+			(Relop_LESSER) LESSER
+			|
+			(Relop_LESSEREQUAL) LESSEREQUAL
+			;
+
+/* ////////////////// */			
+/* Addop = "+" | "‐". */			
+/* ////////////////// */
+			
+Addop ::= 	(Addop_PLUS) PLUS
+			|			
+			(Addop_MINUS) MINUS
+			;
+
+/* //////////////////////// */
+/* Mulop = "*" | "/" | "%". */
+/* //////////////////////// */			
+			
+Mulop ::= 	(Mulop_MUL) MUL
+			|			
+			(Mulop_DIV) DIV
+			|
+			(Mulop_MOD) MOD
+			;
+			
+			

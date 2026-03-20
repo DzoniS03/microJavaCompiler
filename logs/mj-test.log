@@ -1,0 +1,430 @@
+INFO  17:19:47,343 - Compiling source file: C:\Fax\PRP1\MJCompiler\test\program.mj
+INFO  17:19:47,807 - #2 program
+INFO  17:19:47,807 - #50 example
+INFO  17:19:47,807 - #5 const
+INFO  17:19:47,817 - #50 int
+INFO  17:19:47,817 - #50 MAX
+INFO  17:19:47,826 - #6 =
+INFO  17:19:47,826 - #52 100
+INFO  17:19:47,826 - #7 ;
+INFO  17:19:47,837 - #50 int
+INFO  17:19:47,839 - #50 count
+INFO  17:19:47,839 - #7 ;
+INFO  17:19:47,840 - #50 int
+INFO  17:19:47,850 - #50 numbers
+INFO  17:19:47,850 - #9 [
+INFO  17:19:47,850 - #10 ]
+INFO  17:19:47,850 - #7 ;
+INFO  17:19:47,850 - #3 {
+INFO  17:19:47,850 - #12 void
+INFO  17:19:47,851 - #50 main
+INFO  17:19:47,851 - #13 (
+INFO  17:19:47,852 - #14 )
+INFO  17:19:47,853 - #3 {
+INFO  17:19:47,861 - #50 numbers
+INFO  17:19:47,869 - #6 =
+INFO  17:19:47,870 - #37 new
+INFO  17:19:47,888 - #50 int
+INFO  17:19:47,888 - #9 [
+INFO  17:19:47,888 - #52 10
+INFO  17:19:47,888 - #10 ]
+INFO  17:19:47,905 - #7 ;
+INFO  17:19:47,905 - #50 count
+INFO  17:19:47,905 - #6 =
+INFO  17:19:47,905 - #52 0
+INFO  17:19:47,905 - #7 ;
+INFO  17:19:47,905 - #26 for
+INFO  17:19:47,906 - #13 (
+INFO  17:19:47,907 - #50 count
+INFO  17:19:47,907 - #6 =
+INFO  17:19:47,907 - #52 0
+INFO  17:19:47,907 - #7 ;
+INFO  17:19:47,907 - #50 count
+INFO  17:19:47,909 - #44 <
+INFO  17:19:47,909 - #52 10
+INFO  17:19:47,924 - #7 ;
+INFO  17:19:47,931 - #50 count
+INFO  17:19:47,932 - #32 ++
+INFO  17:19:47,932 - #14 )
+INFO  17:19:47,940 - #3 {
+INFO  17:19:47,941 - #50 numbers
+INFO  17:19:47,941 - #9 [
+INFO  17:19:47,948 - #50 count
+INFO  17:19:47,948 - #10 ]
+INFO  17:19:47,948 - #6 =
+INFO  17:19:47,948 - #50 count
+INFO  17:19:47,948 - #47 *
+INFO  17:19:47,948 - #52 2
+INFO  17:19:47,955 - #7 ;
+INFO  17:19:47,956 - #4 }
+INFO  17:19:47,956 - #21 print
+INFO  17:19:47,956 - #13 (
+INFO  17:19:47,956 - #50 numbers
+INFO  17:19:47,956 - #9 [
+INFO  17:19:47,956 - #52 5
+INFO  17:19:47,956 - #10 ]
+INFO  17:19:47,956 - #14 )
+INFO  17:19:47,956 - #7 ;
+INFO  17:19:47,956 - #4 }
+INFO  17:19:47,956 - #4 }
+INFO  17:19:47,973 - Program(
+  ProgName(
+   example
+  ) [ProgName]
+  ConstVarEnumDeclList_Var(
+    ConstVarEnumDeclList_Var(
+      ConstVarEnumDeclList_Const(
+        ConstVarEnumDeclList_e(
+        ) [ConstVarEnumDeclList_e]
+        ConstDeclList(
+          Type(
+           int
+          ) [Type]
+          ConstDecl(
+           MAX
+            Constant_NUMBER(
+             100
+            ) [Constant_NUMBER]
+          ) [ConstDecl]
+          AdditionalConstDecl_e(
+          ) [AdditionalConstDecl_e]
+        ) [ConstDeclList]
+      ) [ConstVarEnumDeclList_Const]
+      VarDeclList(
+        Type(
+         int
+        ) [Type]
+        VarDecl_IDENT(
+         count
+        ) [VarDecl_IDENT]
+        AdditionalVarDecl_e(
+        ) [AdditionalVarDecl_e]
+      ) [VarDeclList]
+    ) [ConstVarEnumDeclList_Var]
+    VarDeclList(
+      Type(
+       int
+      ) [Type]
+      VarDecl_Array(
+       numbers
+      ) [VarDecl_Array]
+      AdditionalVarDecl_e(
+      ) [AdditionalVarDecl_e]
+    ) [VarDeclList]
+  ) [ConstVarEnumDeclList_Var]
+  MethodDeclList_Chain(
+    MethodDeclList_e(
+    ) [MethodDeclList_e]
+    MethodDecl(
+      MethTypeName_VOID(
+       main
+      ) [MethTypeName_VOID]
+      FormParsList_e(
+      ) [FormParsList_e]
+      VarDeclListExtra_e(
+      ) [VarDeclListExtra_e]
+      StatementList_Chain(
+        StatementList_Chain(
+          StatementList_Chain(
+            StatementList_Chain(
+              StatementList_e(
+              ) [StatementList_e]
+              Statement_DesStm(
+                DesignatorStatement_Assign(
+                  Designator_IDENT(
+                    DesName(
+                     numbers
+                    ) [DesName]
+                  ) [Designator_IDENT]
+                  AssignOp(
+                  ) [AssignOp]
+                  Expr_Simple(
+                    SimpleExpr(
+                      AddopTermList_SingleTerm(
+                        Term(
+                          MulopFactorList_SingleFactor(
+                            Factor(
+                              UnaryOp_e(
+                              ) [UnaryOp_e]
+                              FactorOption_NEW(
+                                Type(
+                                 int
+                                ) [Type]
+                                Expr_Simple(
+                                  SimpleExpr(
+                                    AddopTermList_SingleTerm(
+                                      Term(
+                                        MulopFactorList_SingleFactor(
+                                          Factor(
+                                            UnaryOp_e(
+                                            ) [UnaryOp_e]
+                                            FactorOption_NUM(
+                                             10
+                                            ) [FactorOption_NUM]
+                                          ) [Factor]
+                                        ) [MulopFactorList_SingleFactor]
+                                      ) [Term]
+                                    ) [AddopTermList_SingleTerm]
+                                  ) [SimpleExpr]
+                                ) [Expr_Simple]
+                              ) [FactorOption_NEW]
+                            ) [Factor]
+                          ) [MulopFactorList_SingleFactor]
+                        ) [Term]
+                      ) [AddopTermList_SingleTerm]
+                    ) [SimpleExpr]
+                  ) [Expr_Simple]
+                ) [DesignatorStatement_Assign]
+              ) [Statement_DesStm]
+            ) [StatementList_Chain]
+            Statement_DesStm(
+              DesignatorStatement_Assign(
+                Designator_IDENT(
+                  DesName(
+                   count
+                  ) [DesName]
+                ) [Designator_IDENT]
+                AssignOp(
+                ) [AssignOp]
+                Expr_Simple(
+                  SimpleExpr(
+                    AddopTermList_SingleTerm(
+                      Term(
+                        MulopFactorList_SingleFactor(
+                          Factor(
+                            UnaryOp_e(
+                            ) [UnaryOp_e]
+                            FactorOption_NUM(
+                             0
+                            ) [FactorOption_NUM]
+                          ) [Factor]
+                        ) [MulopFactorList_SingleFactor]
+                      ) [Term]
+                    ) [AddopTermList_SingleTerm]
+                  ) [SimpleExpr]
+                ) [Expr_Simple]
+              ) [DesignatorStatement_Assign]
+            ) [Statement_DesStm]
+          ) [StatementList_Chain]
+          Statement_FOR(
+            ForNonterm(
+            ) [ForNonterm]
+            ForDesignatorStm_exists(
+              DesignatorStatement_Assign(
+                Designator_IDENT(
+                  DesName(
+                   count
+                  ) [DesName]
+                ) [Designator_IDENT]
+                AssignOp(
+                ) [AssignOp]
+                Expr_Simple(
+                  SimpleExpr(
+                    AddopTermList_SingleTerm(
+                      Term(
+                        MulopFactorList_SingleFactor(
+                          Factor(
+                            UnaryOp_e(
+                            ) [UnaryOp_e]
+                            FactorOption_NUM(
+                             0
+                            ) [FactorOption_NUM]
+                          ) [Factor]
+                        ) [MulopFactorList_SingleFactor]
+                      ) [Term]
+                    ) [AddopTermList_SingleTerm]
+                  ) [SimpleExpr]
+                ) [Expr_Simple]
+              ) [DesignatorStatement_Assign]
+            ) [ForDesignatorStm_exists]
+            ForCondStart(
+            ) [ForCondStart]
+            ForCondition_exists(
+              Condition_OK(
+                CondTermList_Single(
+                  CondTerm(
+                    CondFactList_Single(
+                      CondFact_Relop(
+                        SimpleExpr(
+                          AddopTermList_SingleTerm(
+                            Term(
+                              MulopFactorList_SingleFactor(
+                                Factor(
+                                  UnaryOp_e(
+                                  ) [UnaryOp_e]
+                                  FactorOption_Des(
+                                    Designator_IDENT(
+                                      DesName(
+                                       count
+                                      ) [DesName]
+                                    ) [Designator_IDENT]
+                                  ) [FactorOption_Des]
+                                ) [Factor]
+                              ) [MulopFactorList_SingleFactor]
+                            ) [Term]
+                          ) [AddopTermList_SingleTerm]
+                        ) [SimpleExpr]
+                        Relop_LESSER(
+                        ) [Relop_LESSER]
+                        SimpleExpr(
+                          AddopTermList_SingleTerm(
+                            Term(
+                              MulopFactorList_SingleFactor(
+                                Factor(
+                                  UnaryOp_e(
+                                  ) [UnaryOp_e]
+                                  FactorOption_NUM(
+                                   10
+                                  ) [FactorOption_NUM]
+                                ) [Factor]
+                              ) [MulopFactorList_SingleFactor]
+                            ) [Term]
+                          ) [AddopTermList_SingleTerm]
+                        ) [SimpleExpr]
+                      ) [CondFact_Relop]
+                    ) [CondFactList_Single]
+                  ) [CondTerm]
+                ) [CondTermList_Single]
+              ) [Condition_OK]
+            ) [ForCondition_exists]
+            ForIncrStart(
+            ) [ForIncrStart]
+            ForDesignatorStm_exists(
+              DesignatorStatement_INC(
+                Designator_IDENT(
+                  DesName(
+                   count
+                  ) [DesName]
+                ) [Designator_IDENT]
+              ) [DesignatorStatement_INC]
+            ) [ForDesignatorStm_exists]
+            ForBodyStart(
+            ) [ForBodyStart]
+            Statement_Block(
+              StatementList_Chain(
+                StatementList_e(
+                ) [StatementList_e]
+                Statement_DesStm(
+                  DesignatorStatement_Assign(
+                    Designator_Array(
+                      DesArrayName(
+                       numbers
+                      ) [DesArrayName]
+                      Expr_Simple(
+                        SimpleExpr(
+                          AddopTermList_SingleTerm(
+                            Term(
+                              MulopFactorList_SingleFactor(
+                                Factor(
+                                  UnaryOp_e(
+                                  ) [UnaryOp_e]
+                                  FactorOption_Des(
+                                    Designator_IDENT(
+                                      DesName(
+                                       count
+                                      ) [DesName]
+                                    ) [Designator_IDENT]
+                                  ) [FactorOption_Des]
+                                ) [Factor]
+                              ) [MulopFactorList_SingleFactor]
+                            ) [Term]
+                          ) [AddopTermList_SingleTerm]
+                        ) [SimpleExpr]
+                      ) [Expr_Simple]
+                    ) [Designator_Array]
+                    AssignOp(
+                    ) [AssignOp]
+                    Expr_Simple(
+                      SimpleExpr(
+                        AddopTermList_SingleTerm(
+                          Term(
+                            MulopFactorList_Mulop(
+                              MulopFactorList_SingleFactor(
+                                Factor(
+                                  UnaryOp_e(
+                                  ) [UnaryOp_e]
+                                  FactorOption_Des(
+                                    Designator_IDENT(
+                                      DesName(
+                                       count
+                                      ) [DesName]
+                                    ) [Designator_IDENT]
+                                  ) [FactorOption_Des]
+                                ) [Factor]
+                              ) [MulopFactorList_SingleFactor]
+                              Mulop_MUL(
+                              ) [Mulop_MUL]
+                              Factor(
+                                UnaryOp_e(
+                                ) [UnaryOp_e]
+                                FactorOption_NUM(
+                                 2
+                                ) [FactorOption_NUM]
+                              ) [Factor]
+                            ) [MulopFactorList_Mulop]
+                          ) [Term]
+                        ) [AddopTermList_SingleTerm]
+                      ) [SimpleExpr]
+                    ) [Expr_Simple]
+                  ) [DesignatorStatement_Assign]
+                ) [Statement_DesStm]
+              ) [StatementList_Chain]
+            ) [Statement_Block]
+          ) [Statement_FOR]
+        ) [StatementList_Chain]
+        Statement_PRINT(
+          Expr_Simple(
+            SimpleExpr(
+              AddopTermList_SingleTerm(
+                Term(
+                  MulopFactorList_SingleFactor(
+                    Factor(
+                      UnaryOp_e(
+                      ) [UnaryOp_e]
+                      FactorOption_Des(
+                        Designator_Array(
+                          DesArrayName(
+                           numbers
+                          ) [DesArrayName]
+                          Expr_Simple(
+                            SimpleExpr(
+                              AddopTermList_SingleTerm(
+                                Term(
+                                  MulopFactorList_SingleFactor(
+                                    Factor(
+                                      UnaryOp_e(
+                                      ) [UnaryOp_e]
+                                      FactorOption_NUM(
+                                       5
+                                      ) [FactorOption_NUM]
+                                    ) [Factor]
+                                  ) [MulopFactorList_SingleFactor]
+                                ) [Term]
+                              ) [AddopTermList_SingleTerm]
+                            ) [SimpleExpr]
+                          ) [Expr_Simple]
+                        ) [Designator_Array]
+                      ) [FactorOption_Des]
+                    ) [Factor]
+                  ) [MulopFactorList_SingleFactor]
+                ) [Term]
+              ) [AddopTermList_SingleTerm]
+            ) [SimpleExpr]
+          ) [Expr_Simple]
+        ) [Statement_PRINT]
+      ) [StatementList_Chain]
+    ) [MethodDecl]
+  ) [MethodDeclList_Chain]
+) [Program]
+INFO  17:19:47,974 - ============================================================================================
+INFO  17:19:48,009 - Pristup globalnoj promenljivoj numbers [Kind: 1, Type: 3, Adr: 1, Lvl: 0] na liniji 11
+INFO  17:19:48,017 - Pristup globalnoj promenljivoj count [Kind: 1, Type: 1, Adr: 0, Lvl: 0] na liniji 12
+INFO  17:19:48,018 - Pristup globalnoj promenljivoj count [Kind: 1, Type: 1, Adr: 0, Lvl: 0] na liniji 14
+INFO  17:19:48,018 - Pristup globalnoj promenljivoj count [Kind: 1, Type: 1, Adr: 0, Lvl: 0] na liniji 14
+INFO  17:19:48,018 - Pristup globalnoj promenljivoj count [Kind: 1, Type: 1, Adr: 0, Lvl: 0] na liniji 14
+INFO  17:19:48,018 - Pristup globalnoj promenljivoj count [Kind: 1, Type: 1, Adr: 0, Lvl: 0] na liniji 15
+INFO  17:19:48,021 - Pristup elementu niza numbers [Kind: 5, Type: 1] na liniji 15
+INFO  17:19:48,021 - Pristup globalnoj promenljivoj count [Kind: 1, Type: 1, Adr: 0, Lvl: 0] na liniji 15
+INFO  17:19:48,022 - Pristup elementu niza numbers [Kind: 5, Type: 1] na liniji 18
+INFO  17:19:48,022 - ============================================================================================
+INFO  17:19:48,058 - Generisanje uspesno zavrseno!
